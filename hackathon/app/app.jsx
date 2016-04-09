@@ -36,6 +36,8 @@ var Paper = React.createClass({
 });
 
 
+
+
 var FixMap = React.createClass({
 
     scrollCallback: debounce(function(e){
@@ -59,7 +61,7 @@ var FixMap = React.createClass({
     render: function(){
 
         return (
-            <div style={{"height" : "320px"}}>
+            <div style={{"height" : "260px"}}>
                 <div className="cm-header opacity" >
                     <span className="cm-header-icon fl">
                         <i className="icon-back"></i>
@@ -158,6 +160,15 @@ var Vinfo = React.createClass({
             endCity: null
         };
     },
+    onBlur:function(){
+
+        $(this.refs.vtitle).removeClass("vtitle-blank");
+
+    },
+    onFocus:function(){
+        $(this.refs.vtitle).addClass("vtitle-blank");
+
+    },
     render: function(){
         var data = this.state;
         var formatDate = function(d) {
@@ -165,7 +176,7 @@ var Vinfo = React.createClass({
         };
         return (
             <div className="v-info">
-                <h2>5日4晚 泰国游</h2>
+                <input type="text" ref="vtitle" className="vtitle-blank" onBlur={this.onBlur}  onFocus={this.onFocus} placeholder="加个标题呗"/>
                 <ul>
                     <li>
                         <small>起点</small>
@@ -192,6 +203,11 @@ var Vinfo = React.createClass({
 });
 
 var TimeAct = React.createClass({
+    onclick: function() {
+        headmap.focusing.focus(false);
+        headmap.focusing = this.props.data.mapOverload;
+        headmap.focusing.focus();
+    },
 
     renderTimeBar: function(){
         return (
@@ -204,7 +220,7 @@ var TimeAct = React.createClass({
 
     flight: function(data){
         return (
-            <div className="time-act">
+            <div className="time-act" onClick={this.onclick}>
                 {this.renderTimeBar()}
                 <div className="flight-box">
                     <h3>{data.company + data.flight}</h3>
@@ -225,21 +241,24 @@ var TimeAct = React.createClass({
     },
 
     hotel: function(data){
+
         return (
-            <div className="time-act">
+            <div className="time-act" onClick={this.onclick}>
                 {this.renderTimeBar()}
-                <div className="hotel-box" >
-                    <div className="checkinfo"><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
-                    <div className="maskshow">
-                        <div title="0" className="hotels">
-                            <i className="tag-fav">10</i>
-                            <h3>{data.name}</h3>
-                            <p><img src="img/img03.jpg" alt=""/></p>
-                        </div>
-                        <div title="2"  className="hotels">
-                            添加
-                        </div>
+                <div className="hotel-box">
+                    <div ref="maskshow" className="maskshow" onclick="this.className+=' on';" style={{height:"256px"}}>
+
+                            <div title="2" className="hotels addhotel"><i>+</i>推荐酒店</div>
+                            <div title="0" className="hotels">
+                                <i className="tag-fav">10</i>
+                                <h3>Goodwood Park Hotel Singapore (新加坡良木园大酒店) </h3>
+                                <p><img src="img/img03.jpg" alt=""/></p>
+                            </div>
+
+
                     </div>
+                    <div className="token" style={{height:"296px",display:"none"}}></div>
+                    <div className="checkinfo"><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
                 </div>
             </div>
         )
@@ -247,7 +266,7 @@ var TimeAct = React.createClass({
 
     scenic: function(data){
         return (
-            <div className="time-act">
+            <div className="time-act" onClick={this.onclick}>>
                 {this.renderTimeBar()}
                 <div className="scenic-box">
                     <div className="scenicinfo">{data.name}</div>
@@ -256,8 +275,17 @@ var TimeAct = React.createClass({
             </div>
         )
     },
+    componentDidMount: function(data){
+        console.log('---------------',this.props.data.type);
+        if(this.props.data.type=="hotel"){
 
+
+            new window.addmaskshow($(this.refs.maskshow));
+
+        }
+    },
     render: function(){
+
         var data = this.props.data;
         return this[data.type](data);
     }
@@ -267,12 +295,13 @@ var TimeTool = React.createClass({
 
     getInitialState: function(){
         return {
-            action: true
+            action: false
         }
     },
 
     renderItem: function(){
-        if(this.state.action){
+
+        // if(this.state.action){
             return (
                 <div className="action" onClick={this._handleAdd}>
                     <div className="time-tag flight" title="flight"></div>
@@ -280,15 +309,15 @@ var TimeTool = React.createClass({
                     <div className="time-tag scenic" title="scenic"></div>
                 </div>
             )
-        }else{
-            return
-        }
+        // }else{
+        //     return
+        // }
     },
 
     render: function(){
         return (
-            <div className="time-tool">
-                <div className="time-tag addact" onClick={this.handleAction}></div>
+            <div className="time-tool" ref="addact">
+                <div  className="time-tag addact" onClick={this.handleAction}></div>
                 {this.renderItem()}
             </div>
         )
@@ -298,6 +327,12 @@ var TimeTool = React.createClass({
         this.setState({
             action: !this.state.action
         });
+        if(this.state.action){
+            $(this.refs.addact).removeClass('flyout');
+        }else{
+            $(this.refs.addact).addClass('flyout');
+        }
+
     },
 
     _handleAdd: function(e){
@@ -338,8 +373,8 @@ var TimeLine = React.createClass({
         var overload;
         // 航班信息
         if (o.flight) {
-            var mFrom = new yuantu.Marker({ address: o.departAirport });
-            var mTo   = new yuantu.Marker({ address: o.arriveAirport });
+            var mFrom = new yuantu.Marker({ address: o.departAirport, icon: './img/dot02.png' });
+            var mTo   = new yuantu.Marker({ address: o.arriveAirport, icon: './img/dot02.png' });
             var line  = new yuantu.Line(mFrom, mTo);
 
             // 出发城市
@@ -364,18 +399,42 @@ var TimeLine = React.createClass({
 
             // 时间计算
             // 没有日期数据。
+
+            headmap.preMarker = mTo;
             overload = line;
         }
 
         // 景点信息
         else if (o.detailedAddress) {
             var marker = new yuantu.Marker({ address: o.detailedAddress, zoom: 13 });
+            var path = new yuantu.Path(headmap.preMarker, marker);
+
+            // 价格计算
+            var price = vinfo.state.price;
+            var ret = o.tickets[0].price.match(/\d+/);
+            if (ret) {
+                price += parseInt(ret[0]);
+            }
+            vinfo.setState({ price: price });
+
+            headmap.preMarker = marker;
             overload = marker;
         }
 
         // 酒店信息
         else {
             var marker = new yuantu.Marker({ address: o.name, zoom: 15 });
+            var path = new yuantu.Path(headmap.preMarker, marker);
+
+            // 价格计算
+            var price = vinfo.state.price;
+            var ret = o.price.match(/\d+/);
+            if (ret) {
+                price += parseInt(ret[0]);
+            }
+            vinfo.setState({ price: price });
+
+            headmap.preMarker = marker;
             overload = marker;
         }
 
@@ -386,6 +445,7 @@ var TimeLine = React.createClass({
         headmap.focusing = overload;
         headmap.focusing.focus();
         headmap.overloads.push(overload);
+        o.mapOverload = overload;
 
         this.state.data.push(o)
         this.forceUpdate(function(){
@@ -446,6 +506,7 @@ var SearchPage = React.createClass({
             dstCity: "",
             search_data: [],
             data: [],
+            scenicspot:""
         }
     },
 
@@ -460,10 +521,13 @@ var SearchPage = React.createClass({
 
                 switch (data.type){
                     case 'flight':
+
                         break;
                     case 'hotel':
+
                         break;
                     case 'scenic':
+
                         CFG.current = (CFG.current == 2) ? 0 : CFG.current + 1;
                         break;
                 }
@@ -504,16 +568,36 @@ var SearchPage = React.createClass({
 
         var renderfunc = this[type];
 
+        console.log(type);
+        var isscenicspot = "";
+        function isscenicspot1(o){
+            if(type=='scenic'){
+
+                return null;
+            }else{
+                return <span>{o.label}</span>
+            }
+
+        }
+        var isscenicspot2 = <span>&nbsp; </span>
+        if(type=='scenic'){
+            isscenicspot = "scenic-tool";
+
+            isscenicspot2="";
+        }
+        console.log(isscenicspot);
         return (
             <div>
-                <div className="search-tool">
+                <div className={"search-tool "+isscenicspot}>
                     {search_data.map(function(o, i){
                         return <div key={"s"+i} className={"flight-cell "+o.class}>
-                            <span>{o.label}</span>
+                            {isscenicspot1(o)}
+
+
                             <input ref={'txt'+i} placeholder={o.value}/>
                         </div>
                     })}
-                    <div className="flight-cell search-btn"><span>&nbsp; </span><input type="button" className="g-btn" defaultValue="搜索" /></div>
+                    <div className="flight-cell search-btn ">{isscenicspot2} <input type="button" className="g-btn" defaultValue="搜索" /></div>
                 </div>
                 {renderfunc(data)}
             </div>
@@ -589,12 +673,12 @@ var SearchPage = React.createClass({
     },
 
     scenic: function(data){
+        this.state.scenicspot = "scenicspot";
         return (
             <div className="ticket_list list-bottom-fix">
                 <ul className="border-list g-pro-list ttd-pro-list no-border-top"  onClick={this._handleSelect}>
 
                     {data.map(function(o, i){
-                        console.log(o);
                         return (<li className="js_go_to_detail" title={i} key={"hotel_"+i}>
                             <div className="js_visited border-item g-pro-list_pl5 ttd-pro-list-item">
                                 <div className="g-pro-list-img">

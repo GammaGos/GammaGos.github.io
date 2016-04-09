@@ -17,7 +17,7 @@ img{vertical-align:middle;}
 .fly-layer.fadeout{transition: 0.5s all;transform:translateY(110%);}
 .fly-layer.fadein{transition: 0.5s all;transform:translateY(0%);}
 /**/
-.search-tool{height:125px;borde: 2px solid #ddd;position: relative;z-index: 1;}
+.search-tool{height:125px;borde: 2px solid #ddd;position: relative;z-index: 1;background-color: #fbf8ec;}
 .search-tool input{height:30px;padding:4px 28px; line-height:normal; border:1px solid #ddd;box-sizing:border-box; background-color:#fff; border-radius:3px;display:block;font-size:14px;line-height: 30px;}
 .flight-cell{display:block;position:absolute;margin:0;width: 50%}
 .flight-cell span{display: block;font-size:12px;color:#666;}
@@ -32,9 +32,13 @@ img{vertical-align:middle;}
 .scenic-tool .search-dest{top:10px; left:35%;width：35%;}
 .scenic-tool .search-btn{top:10px;left:80%;width:20%;}
 /**/
-.user-list{}
+.user-list {
+    background-color: #fbf8ec;
+    padding: 10px 0;
+}
+
 .user-list dl{}
-.user-list dt{margin:10px 10px 10px 56px; font-size: 14px;line-height: 1.4;color:#5b553e;}
+.user-list dt{ margin: 15px 10px 0 56px; font-size: 14px;line-height: 1.4;color:#5b553e;}
 .user-list dd{overflow: hidden;background-color: #fff;}
 .user-list dd.curr{position: relative;z-index: 1; background-color: #FAEBD7;box-shadow:0 0 10px #ccc;}
 .user-list dd.curr big{border-bottom: 0px solid #b2b2b2;}
@@ -65,8 +69,8 @@ img{vertical-align:middle;}
 
 /*=========*/
 .v-info{ overflow: hidden; margin: 10px;border-bottom: 2px solid #c8f2fc;}
-.v-info h2{text-align: center;}
-.v-info .vtitle-blank{color:#ceb966;border: 2px dashed #ceb966;}
+.v-info input{text-align: center;color:#ceb966;}
+.v-info .vtitle-blank{border: 2px dashed #ceb966;}
 .v-info ul{display:block;overflow: hidden; padding:15px 0;background-color:#fff;}
 .v-info li{ float: left;width:20%;padding:0 2%;border-right: 2px solid #bfbfbf;text-align:center;background-color: #fff;}
 .v-info li:last-child{ border-right: none;}
@@ -82,7 +86,7 @@ img{vertical-align:middle;}
 /**/
 .time-tag{ width: 36px; height: 36px;margin-left:10px; background-color:#1470e4;background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;}
 .takephoto{background-image: url(../img/icon-camera.svg);background-size: 65%;}
-.geol{background-image: url(../img/icon-spot.svg);background-size: 70%;}
+.geol{background-image: url(../img/icon-spot.svg);background-size: 70%;margin-bottom: 20px;}
 .addact{background-image: url(../img/icon-add.svg);background-size: 65%;}
 .flight{background-image: url(../img/icon-flight2.svg);background-size: 80%;background-color:#fff;}
 .scenic{background-image: url(../img/icon-scenic.svg);background-size: 65%;background-color:#fff;}
@@ -141,11 +145,12 @@ img{vertical-align:middle;}
 .checkinfo{ font-size: 12px;padding: 10px 15px;}
 .maskshow { position: relative;z-index:1;overflow: hidden;}
 .maskshow .hotels:nth-child(1){display: none;}
-/*.maskshow .hotels:nth-child(2){transform:translateY(0px);}
+.maskshow .hotels:nth-child(2){transform:translateY(0px);}
 .maskshow .hotels:nth-child(3){transform:translateY(42px);}
-.maskshow .hotels:nth-child(4){transform:translateY(84px);}*/
+.maskshow .hotels:nth-child(4){transform:translateY(84px);}
+.maskshow .hotels:nth-child(5){transform:translateY(126px);}/**/
 .maskshow.on{position: fixed;z-index:970; top:0;left: 0;width: 100%;height: 100%;background-color: rgba(0,0,0,.75);padding-top: 0;}
-.maskshow.on .hotels { position: absolute; top:50%;left: 5%; width:90%; margin: 0 auto; transition: 0.5s all;}
+.maskshow.on .hotels { position: absolute; top:32%;left: 5%; width:90%; margin: 0 auto; transition: 0.5s all;}
 .maskshow.on .hotels:nth-child(1){display:block;}
 /*.maskshow.on .hotels:nth-child(2){transform:translateY(110%);}
 .maskshow.on .hotels:nth-child(3){transform:translateY(220%);}
@@ -171,27 +176,3 @@ img{vertical-align:middle;}
 .photolib{overflow: hidden;}
 .photolib .photo{ box-sizing: border-box;float:left; width:25%;border: 1px solid #fff;}
 .photolib .photo img{width:100%;height: auto;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

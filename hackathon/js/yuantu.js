@@ -398,6 +398,7 @@ var yuantu = (function(global, undefined) {
 		on = (on !== false);
 		if (!on) {
 			this.animate(false);
+			this.highlight(false);
 			return;
 		}
 
@@ -406,30 +407,36 @@ var yuantu = (function(global, undefined) {
 			var map = that._instance.getMap();
 			if (map) {
 				map.setFitView(that._instance);
+				that.markers.forEach(function(marker) {
+					marker._instance.setTop(true);
+				});
 				that.animate();
+				that.highlight();
 			}
 		});
 	};
 
-	TU.Line.prototype.highligh = function(on) {
+	TU.Line.prototype.highlight = function(on) {
 		on = (on !== false);
 
 		var OPTIONS_HIGHLIGHT = {
 			isOutline: true,
-			outlineColor: '#0000ff'
+			outlineColor: '#99ff99',
+			strokeStyle: 'solid'
 		};
 		var OPTIONS_NORMAL = {
-			isOutline: false
+			isOutline: false,
+			strokeStyle: 'dashed'
 		};
 
 		var that = this;
 		var map = this._instance.getMap();
 		if (on) {
-			that._instance.setOptions(OPTIONS_NORMAL);
+			that._instance.setOptions(OPTIONS_HIGHLIGHT);
 		}
 		else if (map) {
 			map.setFitView(this._instance);
-			this._instance.setOptions(OPTIONS_HIGHLIGHT);
+			this._instance.setOptions(OPTIONS_NORMAL);
 		}
 	};
 
@@ -448,10 +455,18 @@ var yuantu = (function(global, undefined) {
 			if (that._animateMarker) {
 				marker = that._animateMarker;
 				marker.setPosition(targetPosition);
+				marker.show();
+				marker.setTop(true);
 			}
 			else {
+				// @temp
+				var icon = './img/dot05.png'; // West - East;
+				if (that.markers[0]._instance.getPosition().getLng() < that.markers[1]._instance.getPosition().getLng()) {
+					icon = './img/dot04.png'; // East - West
+				}
+
 				var config = {
-					icon: './img/dot02.png',
+					icon: icon,
 					// autoRotation: true,
 					position: targetPosition
 				};

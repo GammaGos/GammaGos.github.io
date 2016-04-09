@@ -306,25 +306,63 @@ var CFG = {
                 "price": "¥819"
             }
         ],         //成都到拉萨
-        "shanghai": [
-            {
-                "company": "东方航空",
-                "flight": "MU522",
-                "departTime": "21:10",
-                "departAirport": "浦东国际机场T1",
-                "arriveTime": "11:00",
-                "arriveAirport": "咸阳国际机场T3",
-                "price": "¥980"
-            }, {
-                "company": "东方航空",
-                "flight": "MU2158",
-                "departTime": "14:10",
-                "departAirport": "浦东国际机场T1",
-                "arriveTime": "11:00",
-                "arriveAirport": "咸阳国际机场T3",
-                "price": "¥1000"
-            }
-        ]      //拉萨到上海
+        "shanghai": [{
+        	"company": "东方航空",
+        	"flight": "MU9732",
+        	"departTime": "18:50",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "21:15",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥780"
+        }, {
+        	"company": "四川航空",
+        	"flight": "3U8818",
+        	"departTime": "12:00",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "15:35",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1020"
+        }, {
+        	"company": "东方航空",
+        	"flight": "MU5940",
+        	"departTime": "13:35",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "17:05",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1020"
+        }, {
+        	"company": "西藏航空",
+        	"flight": "TV9847",
+        	"departTime": "09:25",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "11:45",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1077"
+        }, {
+        	"company": "中国国航",
+        	"flight": "CA3947",
+        	"departTime": "09:25",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "11:45",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1130"
+        }, {
+        	"company": "南方航空",
+        	"flight": "CZ9609",
+        	"departTime": "13:35",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "17:05",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1130"
+        }, {
+        	"company": "东方航空",
+        	"flight": "MU3384",
+        	"departTime": "12:00",
+        	"departAirport": "拉萨贡嘎机场",
+        	"arriveTime": "15:35",
+        	"arriveAirport": "长水国际机场",
+        	"price": "¥1580"
+        }]   //拉萨到上海
     },
 
     hotel_data: {
@@ -535,7 +573,7 @@ var CFG = {
             "link": "/dest/t3117.html",
             "addressName": "【西藏·拉萨】AAAAA",
             "rate": "AAAAA",
-            "detailedAddress": "地址：中国西藏自治区首府拉萨市区西北的玛布日山。",
+            "detailedAddress": "拉萨市区西北的玛布日山。",
             "exercise": "特色：一句佛的偈言，流传到今天；朝着雪域高原，膜拜千百年。",
             "grade": "4.8",
             "gradeDetail": "4.8分(1209人点评)",
@@ -555,7 +593,7 @@ var CFG = {
             "link": "/dest/t3119.html",
             "addressName": "【西藏·拉萨】AAAAA",
             "rate": "AAAAA",
-            "detailedAddress": "地址：拉萨市城关区八廓街。",
+            "detailedAddress": "拉萨市城关区八廓街。",
             "exercise": "特色：那一世，转山转水转佛塔，不为来世只为途中与你相见。",
             "grade": "4.7",
             "gradeDetail": "4.7分(25人点评)",
@@ -575,7 +613,7 @@ var CFG = {
             "link": "/dest/t1409308.html",
             "addressName": "【西藏·拉萨】",
             "rate": "",
-            "detailedAddress": "地址：西藏拉萨市尼木县吞巴乡。",
+            "detailedAddress": "西藏拉萨市尼木县吞巴乡。",
             "exercise": "特色：因有不杀生之功德，尼木藏香是西藏的敬佛上品，并享誉海内外。",
             "grade": "0.0",
             "gradeDetail": "0.0分(0人点评)",
@@ -591,7 +629,7 @@ var CFG = {
             "link": "/dest/t1409307.html",
             "addressName": "【西藏·拉萨】",
             "rate": "",
-            "detailedAddress": "地址：拉萨市太阳岛民族文化艺术宫。",
+            "detailedAddress": "拉萨市太阳岛民族文化艺术宫。",
             "exercise": "特色： 唐卡式歌舞诗是国内也是世界首创。",
             "grade": "2.5",
             "gradeDetail": "2.5分(2人点评)",
@@ -611,7 +649,7 @@ var CFG = {
             "link": "/dest/t11793.html",
             "addressName": "【西藏·当雄】",
             "rate": "",
-            "detailedAddress": "地址：西藏自治区拉萨市当雄县。",
+            "detailedAddress": "西藏自治区拉萨市当雄县。",
             "exercise": "特色：心中的爱有多深，面对纳木错时，这里的湖水就有多深。",
             "grade": "4.6",
             "gradeDetail": "4.6分(94人点评)",
