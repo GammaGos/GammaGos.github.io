@@ -1,0 +1,57 @@
+[{
+	"company": "东方航空",
+	"flight": "MU9732",
+	"departTime": "18:50",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "21:15",
+	"arriveAirport": "长水国际机场",
+	"price": "¥780"
+}, {
+	"company": "四川航空",
+	"flight": "3U8818",
+	"departTime": "12:00",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "15:35",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1020"
+}, {
+	"company": "东方航空",
+	"flight": "MU5940",
+	"departTime": "13:35",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "17:05",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1020"
+}, {
+	"company": "西藏航空",
+	"flight": "TV9847",
+	"departTime": "09:25",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "11:45",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1077"
+}, {
+	"company": "中国国航",
+	"flight": "CA3947",
+	"departTime": "09:25",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "11:45",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1130"
+}, {
+	"company": "南方航空",
+	"flight": "CZ9609",
+	"departTime": "13:35",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "17:05",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1130"
+}, {
+	"company": "东方航空",
+	"flight": "MU3384",
+	"departTime": "12:00",
+	"departAirport": "贡嘎国际机场",
+	"arriveTime": "15:35",
+	"arriveAirport": "长水国际机场",
+	"price": "¥1580"
+}]

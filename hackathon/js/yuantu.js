@@ -1,4 +1,4 @@
-var yuantu = (function(undefined) {
+var yuantu = (function(global, undefined) {
 
 	var yuan = {};
 	yuan.clone = function(obj, attrs) {
@@ -106,6 +106,7 @@ var yuantu = (function(undefined) {
 
 		var _do = function() {
 			var config = yuan.clone(options, [
+				'autoRotation',
 				'icon',
 				'map',
 				'position'
@@ -127,41 +128,6 @@ var yuantu = (function(undefined) {
 		else {
 			_do();
 		}
-	};
-
-	agent.queryLocation = function(options, callback) {
-		if (options instanceof AMap.LngLat) {
-			callback(options);
-		}
-		else if (options.location) {
-			callback(options.location);
-		}
-		else if (options.address) {
-			proxy.require('AMap.Geocoder', function(Geocoder) {
-				var config = yuan.clone(options, [
-					'city'
-					]);
-				var geocoder = new AMap.Geocoder(config);
-				geocoder.getLocation(options.address, function(status, result) {
-					var loc = result.geocodes[0].location;
-					callback(loc);
-				});
-			})
-		}
-		else {
-			throw 'Invalid conditions to confirm the location.';
-		}
-	};
-
-	agent.queryLocations = function(options, callback) {
-		var locs = [], count = options.length, counter = 0;
-		options.forEach(function(point, index) {
-			agent.queryLocation(point, function(loc) {
-				locs[index] = loc;
-				counter++;
-				if (counter == count) callback(locs);
-			});
-		});
 	};
 
 	agent.addLine = function(options, callback) {
@@ -219,6 +185,41 @@ var yuantu = (function(undefined) {
 		}
 
 		return map;
+	};
+
+	agent.queryLocation = function(options, callback) {
+		if (options instanceof AMap.LngLat) {
+			callback(options);
+		}
+		else if (options.location) {
+			callback(options.location);
+		}
+		else if (options.address) {
+			proxy.require('AMap.Geocoder', function(Geocoder) {
+				var config = yuan.clone(options, [
+					'city'
+					]);
+				var geocoder = new AMap.Geocoder(config);
+				geocoder.getLocation(options.address, function(status, result) {
+					var loc = result.geocodes[0].location;
+					callback(loc);
+				});
+			})
+		}
+		else {
+			throw 'Invalid conditions to confirm the location.';
+		}
+	};
+
+	agent.queryLocations = function(options, callback) {
+		var locs = [], count = options.length, counter = 0;
+		options.forEach(function(point, index) {
+			agent.queryLocation(point, function(loc) {
+				locs[index] = loc;
+				counter++;
+				if (counter == count) callback(locs);
+			});
+		});
 	};
 
 	// 基类
@@ -319,11 +320,13 @@ var yuantu = (function(undefined) {
 	TU.Marker = function(options) {
 		new MapBase(this);
 		var that = this;
+		this.options = options;
 
 		// @temp
-		options.icon = './img/dot01.png';
+		if (!options.icon) options.icon = './img/dot01.png';
+		options.autoRotation = true;
 
-		var config = yuan.clone(options, [ 'icon', 'address', 'location' ]);
+		var config = yuan.clone(options, [ 'city', 'icon', 'address', 'location' ]);
 		agent.addMarker(config, function(marker) {
 			that._instance = marker;
 			that.set('ready');
@@ -332,12 +335,22 @@ var yuantu = (function(undefined) {
 		TU.current && this.attachTo(TU.current);
 	};
 
-	TU.Marker.prototype.focus = function() {
-		var map = this._instance.getMap();
-		if (map) {
-			map.setCenter(this._instance.getPosition());
-			this._instance.setAnimation('AMAP_ANIMATION_DROP');
-		}
+	TU.Marker.prototype.focus = function(on) {
+		on = (on !== false);
+		var that = this;
+		this.until('ready', function() {
+			var map = that._instance.getMap();
+			if (map && on) {
+				if (that.options.zoom) {
+					map.setCenter(that._instance.getPosition());
+					map.setZoom(that.options.zoom);
+				}
+				else {
+					map.setFitView(that._instance);
+				}
+				that._instance.setAnimation('AMAP_ANIMATION_DROP');
+			}
+		});
 	};
 
 	TU.Marker.prototype.queryCity = function(callback) {
@@ -361,11 +374,10 @@ var yuantu = (function(undefined) {
 	TU.Line = function(start, end) {
 		new MapBase(this);
 		var that = this;
-		var markers = [ start, end ];
-		var group = new MapGroup(markers);
-		group.until('ready', function() {
+		this.markers = [ start, end ];
+		new MapGroup(this.markers).until('ready', function() {
 			var points = [];
-			markers.forEach(function(marker) {
+			that.markers.forEach(function(marker) {
 				points.push(marker._instance.getPosition());
 			});
 			agent.addLine({
@@ -382,12 +394,19 @@ var yuantu = (function(undefined) {
 		TU.current && this.attachTo(TU.current);
 	};
 
-	TU.Line.prototype.focus = function() {
+	TU.Line.prototype.focus = function(on) {
+		on = (on !== false);
+		if (!on) {
+			this.animate(false);
+			return;
+		}
+
 		var that = this;
 		this.until('ready', function() {
 			var map = that._instance.getMap();
 			if (map) {
 				map.setFitView(that._instance);
+				that.animate();
 			}
 		});
 	};
@@ -412,6 +431,49 @@ var yuantu = (function(undefined) {
 			map.setFitView(this._instance);
 			this._instance.setOptions(OPTIONS_HIGHLIGHT);
 		}
+	};
+
+	// @temp
+	TU.Line.prototype.animate = function(on) {
+		on = (on !== false);
+		var that = this;
+		if (!on) {
+			if (that._animateHandle) global.clearInterval(that._animateHandle);
+			if (that._animateMarker) that._animateMarker.hide();
+			return;
+		}
+
+		this.until('ready', function() {
+			var index = 0, targetPosition = that.markers[0]._instance.getPosition(), marker;
+			if (that._animateMarker) {
+				marker = that._animateMarker;
+				marker.setPosition(targetPosition);
+			}
+			else {
+				var config = {
+					icon: './img/dot02.png',
+					// autoRotation: true,
+					position: targetPosition
+				};
+				marker = new AMap.Marker(config);
+				marker.setMap(TU.current._instance);
+				that._animateMarker = marker;
+			}
+
+			var run = function() {
+				index = ++index % that.markers.length;
+				if (index == 0) {
+					marker.setPosition(that.markers[0]._instance.getPosition());
+					index = 1;
+				}
+				targetPosition = that.markers[index]._instance.getPosition();
+				marker.moveTo(targetPosition, 360000 * 3);
+			};
+
+			that._animateHandle = global.setInterval(function() {
+				if (marker.getPosition().equals(targetPosition)) run();
+			}, 100);
+		});
 	};
 
 	TU.Path = function(start, end) {
@@ -456,4 +518,4 @@ var yuantu = (function(undefined) {
 	};
 
 	return TU;
-})();
+})(this);

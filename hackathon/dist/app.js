@@ -1,24 +1,12 @@
-"use strict";
+'use strict';
 
-var CFG = {
-    users: [{
-        letter: "A",
-        name: "ataa.P",
-        head: "img/avatar01.png"
-    }, {
-        letter: "H",
-        name: "hack.PI",
-        head: "img/avatar02.png"
-    }, {
-        letter: "N",
-        name: "nunn.L",
-        head: "img/avatar_b_01.png"
-        // isActive: true
-    }]
+var headmap = {
+    map: null,
+    lines: []
 };
 
 var Paper = React.createClass({
-    displayName: "Paper",
+    displayName: 'Paper',
 
 
     propTypes: {
@@ -47,7 +35,7 @@ var Paper = React.createClass({
 
 
         return React.createElement(
-            "div",
+            'div',
             { style: style },
             children
         );
@@ -55,7 +43,7 @@ var Paper = React.createClass({
 });
 
 var FixMap = React.createClass({
-    displayName: "FixMap",
+    displayName: 'FixMap',
 
 
     scrollCallback: debounce(function (e) {
@@ -68,7 +56,8 @@ var FixMap = React.createClass({
 
     componentDidMount: function componentDidMount() {
         Events.on(window, "scroll", this.scrollCallback);
-        var map = new yuantu.Map({ container: 'amap' });
+        headmap.map = new yuantu.Map({ container: 'amap' });
+        headmap.map.active();
     },
 
     componentWillUnmount: function componentWillUnmount() {
@@ -78,34 +67,34 @@ var FixMap = React.createClass({
     render: function render() {
 
         return React.createElement(
-            "div",
+            'div',
             { style: { "height": "320px" } },
             React.createElement(
-                "div",
-                { className: "cm-header opacity" },
+                'div',
+                { className: 'cm-header opacity' },
                 React.createElement(
-                    "span",
-                    { className: "cm-header-icon fl" },
-                    React.createElement("i", { className: "icon-back" })
+                    'span',
+                    { className: 'cm-header-icon fl' },
+                    React.createElement('i', { className: 'icon-back' })
                 ),
-                React.createElement("span", { className: "cm-header-icon icon_share i_bef" })
+                React.createElement('span', { className: 'cm-header-icon icon_share i_bef' })
             ),
             React.createElement(
-                "div",
-                { className: "map-box" },
-                React.createElement("div", { className: "map", id: "amap" }),
+                'div',
+                { className: 'map-box' },
+                React.createElement('div', { className: 'map', id: 'amap' }),
                 React.createElement(
-                    "div",
-                    { className: "user_me", ref: "user" },
+                    'div',
+                    { className: 'user_me', ref: 'user' },
                     React.createElement(
-                        "span",
-                        { className: "avatar" },
-                        React.createElement("img", { src: "img/avatar_b_01.png", alt: "" })
+                        'span',
+                        { className: 'avatar' },
+                        React.createElement('img', { src: 'img/avatar_b_01.png', alt: '' })
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         null,
-                        "patata"
+                        'patata'
                     )
                 )
             )
@@ -114,7 +103,7 @@ var FixMap = React.createClass({
 });
 
 var UserBox = React.createClass({
-    displayName: "UserBox",
+    displayName: 'UserBox',
 
 
     _handleAdd: function _handleAdd() {
@@ -138,23 +127,23 @@ var UserBox = React.createClass({
             var _class = o.isActive ? "curr" : "";
 
             items.push(React.createElement(
-                "dl",
+                'dl',
                 { key: i },
                 React.createElement(
-                    "dt",
+                    'dt',
                     null,
                     o.letter
                 ),
                 React.createElement(
-                    "dd",
+                    'dd',
                     { title: i, className: _class },
                     React.createElement(
-                        "span",
-                        { title: i, className: "avatar" },
-                        React.createElement("img", { title: i, src: o.head, alt: "" })
+                        'span',
+                        { title: i, className: 'avatar' },
+                        React.createElement('img', { title: i, src: o.head, alt: '' })
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         { title: i },
                         o.name
                     )
@@ -167,11 +156,11 @@ var UserBox = React.createClass({
     renderUseList: function renderUseList() {
         var data = CFG.users;
         return React.createElement(
-            "div",
-            { className: "main-viewport" },
+            'div',
+            { className: 'main-viewport' },
             React.createElement(
-                "div",
-                { className: "user-list", onClick: this._handleSelect },
+                'div',
+                { className: 'user-list', onClick: this._handleSelect },
                 this.renderItems(data)
             )
         );
@@ -184,108 +173,115 @@ var UserBox = React.createClass({
         data.forEach(function (o, i) {
             if (o.isActive) {
                 activeUsers.push(React.createElement(
-                    "p",
+                    'p',
                     { key: 'avatar_' + i },
                     React.createElement(
-                        "span",
-                        { className: "avatar" },
-                        React.createElement("img", { src: o.head, alt: o.name })
+                        'span',
+                        { className: 'avatar' },
+                        React.createElement('img', { src: o.head, alt: o.name })
                     )
                 ));
             }
         });
 
         return React.createElement(
-            "div",
-            { className: "user-box" },
+            'div',
+            { className: 'user-box' },
             React.createElement(
-                "div",
-                { className: "users" },
+                'div',
+                { className: 'users' },
                 activeUsers,
-                React.createElement("p", { className: "avatar addmore", onClick: this._handleAdd })
+                React.createElement('p', { className: 'avatar addmore', onClick: this._handleAdd })
             )
         );
     }
 });
 
 var Vinfo = React.createClass({
-    displayName: "Vinfo",
+    displayName: 'Vinfo',
 
-
-    render: function render() {
-        var data = {
+    getInitialState: function getInitialState() {
+        return {
             title: "",
-            start: "3.30",
-            end: "4.3",
-            price: "~3300￥"
+            startDate: null,
+            endDate: null,
+            price: 0,
+            startCity: null,
+            endCity: null
         };
-
+    },
+    render: function render() {
+        var data = this.state;
+        var formatDate = function formatDate(d) {
+            return d ? d.getMonth() + 1 + '.' + d.getDate() : '?';
+        };
         return React.createElement(
-            "div",
-            { className: "v-info" },
+            'div',
+            { className: 'v-info' },
             React.createElement(
-                "h2",
+                'h2',
                 null,
-                "5日4晚 泰国游"
+                '5日4晚 泰国游'
             ),
             React.createElement(
-                "ul",
+                'ul',
                 null,
                 React.createElement(
-                    "li",
+                    'li',
                     null,
                     React.createElement(
-                        "small",
+                        'small',
                         null,
-                        "出发"
+                        '起点'
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         null,
-                        "上海"
+                        data.startCity ? data.startCity : '?'
                     )
                 ),
                 React.createElement(
-                    "li",
+                    'li',
                     null,
                     React.createElement(
-                        "small",
+                        'small',
                         null,
-                        "返回"
+                        '终点'
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         null,
-                        "新迈"
+                        data.endCity ? data.endCity : '?'
                     )
                 ),
                 React.createElement(
-                    "li",
+                    'li',
                     null,
                     React.createElement(
-                        "small",
+                        'small',
                         null,
-                        "时间"
+                        '时间'
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         null,
-                        data.start,
-                        " - ",
-                        data.end
+                        formatDate(data.startDate),
+                        ' - ',
+                        formatDate(data.end)
                     )
                 ),
                 React.createElement(
-                    "li",
+                    'li',
                     null,
                     React.createElement(
-                        "small",
+                        'small',
                         null,
-                        "经费"
+                        '经费'
                     ),
                     React.createElement(
-                        "big",
+                        'big',
                         null,
+                        '￥',
                         data.price
                     )
                 )
@@ -295,94 +291,164 @@ var Vinfo = React.createClass({
 });
 
 var TimeAct = React.createClass({
-    displayName: "TimeAct",
+    displayName: 'TimeAct',
 
 
     renderTimeBar: function renderTimeBar() {
         return React.createElement(
-            "div",
-            { className: "time-bar" },
-            React.createElement("span", { className: "time-tag clock" }),
+            'div',
+            { className: 'time-bar' },
+            React.createElement('span', { className: 'time-tag clock' }),
             React.createElement(
-                "span",
-                { className: "status" },
-                "已预订"
-            ),
-            React.createElement(
-                "p",
+                'p',
                 null,
-                "下午20：16，3月31日"
+                '下午20：16，3月31日'
+            )
+        );
+    },
+
+    flight: function flight(data) {
+        return React.createElement(
+            'div',
+            { className: 'time-act' },
+            this.renderTimeBar(),
+            React.createElement(
+                'div',
+                { className: 'flight-box' },
+                React.createElement(
+                    'h3',
+                    null,
+                    data.company + data.flight
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'flight-from' },
+                    React.createElement(
+                        'big',
+                        null,
+                        '上海'
+                    ),
+                    React.createElement(
+                        'small',
+                        null,
+                        data.departAirport
+                    ),
+                    React.createElement(
+                        'strong',
+                        null,
+                        data.departTime
+                    )
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'flight-to' },
+                    React.createElement(
+                        'big',
+                        null,
+                        '成都'
+                    ),
+                    React.createElement(
+                        'small',
+                        null,
+                        data.arriveAirport
+                    ),
+                    React.createElement(
+                        'strong',
+                        null,
+                        data.arriveTime
+                    )
+                ),
+                React.createElement('abbr', null)
+            )
+        );
+    },
+
+    hotel: function hotel(data) {
+        return React.createElement(
+            'div',
+            { className: 'time-act' },
+            this.renderTimeBar(),
+            React.createElement(
+                'div',
+                { className: 'hotel-box' },
+                React.createElement(
+                    'div',
+                    { className: 'checkinfo' },
+                    React.createElement(
+                        'b',
+                        null,
+                        '入住日期'
+                    ),
+                    ' 04月21日 周四 / ',
+                    React.createElement(
+                        'b',
+                        null,
+                        '退房日期'
+                    ),
+                    ' 04月24日 周日'
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'maskshow' },
+                    React.createElement(
+                        'div',
+                        { title: '0', className: 'hotels' },
+                        React.createElement(
+                            'i',
+                            { className: 'tag-fav' },
+                            '10'
+                        ),
+                        React.createElement(
+                            'h3',
+                            null,
+                            data.name
+                        ),
+                        React.createElement(
+                            'p',
+                            null,
+                            React.createElement('img', { src: 'img/img03.jpg', alt: '' })
+                        )
+                    ),
+                    React.createElement(
+                        'div',
+                        { title: '2', className: 'hotels' },
+                        '添加'
+                    )
+                )
+            )
+        );
+    },
+
+    scenic: function scenic(data) {
+        return React.createElement(
+            'div',
+            { className: 'time-act' },
+            this.renderTimeBar(),
+            React.createElement(
+                'div',
+                { className: 'scenic-box' },
+                React.createElement(
+                    'div',
+                    { className: 'scenicinfo' },
+                    data.name
+                ),
+                React.createElement(
+                    'div',
+                    { className: 'scenicspot' },
+                    React.createElement('img', { src: 'img/pic01.jpg', alt: '' })
+                )
             )
         );
     },
 
     render: function render() {
-
         var data = this.props.data;
-
-        return React.createElement(
-            "div",
-            null,
-            React.createElement(
-                "div",
-                { className: "time-act" },
-                this.renderTimeBar(),
-                React.createElement(
-                    "div",
-                    { className: "flight-box" },
-                    React.createElement(
-                        "h3",
-                        null,
-                        data.company + data.flight
-                    ),
-                    React.createElement(
-                        "div",
-                        { className: "flight-from" },
-                        React.createElement(
-                            "big",
-                            null,
-                            "上海"
-                        ),
-                        React.createElement(
-                            "small",
-                            null,
-                            data.departAirport
-                        ),
-                        React.createElement(
-                            "strong",
-                            null,
-                            data.departTime
-                        )
-                    ),
-                    React.createElement(
-                        "div",
-                        { className: "flight-to" },
-                        React.createElement(
-                            "big",
-                            null,
-                            "成都"
-                        ),
-                        React.createElement(
-                            "small",
-                            null,
-                            data.arriveAirport
-                        ),
-                        React.createElement(
-                            "strong",
-                            null,
-                            data.arriveTime
-                        )
-                    ),
-                    React.createElement("abbr", null)
-                )
-            ),
-            React.createElement(Comments, { data: data.comments || [] })
-        );
+        return this[data.type](data);
     }
 });
 
 var TimeTool = React.createClass({
-    displayName: "TimeTool",
+    displayName: 'TimeTool',
 
 
     getInitialState: function getInitialState() {
@@ -394,11 +460,11 @@ var TimeTool = React.createClass({
     renderItem: function renderItem() {
         if (this.state.action) {
             return React.createElement(
-                "div",
-                { className: "action", onClick: this._handleAdd },
-                React.createElement("div", { className: "time-tag flight", title: "flight" }),
-                React.createElement("div", { className: "time-tag hotel", title: "hotel" }),
-                React.createElement("div", { className: "time-tag scenic", title: "scenic" })
+                'div',
+                { className: 'action', onClick: this._handleAdd },
+                React.createElement('div', { className: 'time-tag flight', title: 'flight' }),
+                React.createElement('div', { className: 'time-tag hotel', title: 'hotel' }),
+                React.createElement('div', { className: 'time-tag scenic', title: 'scenic' })
             );
         } else {
             return;
@@ -407,9 +473,9 @@ var TimeTool = React.createClass({
 
     render: function render() {
         return React.createElement(
-            "div",
-            { className: "time-tool" },
-            React.createElement("div", { className: "time-tag addact", onClick: this.handleAction }),
+            'div',
+            { className: 'time-tool' },
+            React.createElement('div', { className: 'time-tag addact', onClick: this.handleAction }),
             this.renderItem()
         );
     },
@@ -425,11 +491,13 @@ var TimeTool = React.createClass({
 
         switch (_key) {
             case "flight":
-                this.props.modal().open("选择机票", React.createElement(SearchPage, { onSelected: this._handleDone }));
+                this.props.modal().open("选择机票", React.createElement(SearchPage, { type: _key, onSelected: this._handleDone }));
                 break;
             case "hotel":
+                this.props.modal().open("选择酒店", React.createElement(SearchPage, { type: _key, onSelected: this._handleDone }));
+                break;
             case "scenic":
-                this._key = _key;
+                this.props.modal().open("选择门票", React.createElement(SearchPage, { type: _key, onSelected: this._handleDone }));
                 break;
             default:
             //do nothin
@@ -443,7 +511,7 @@ var TimeTool = React.createClass({
 });
 
 var TimeLine = React.createClass({
-    displayName: "TimeLine",
+    displayName: 'TimeLine',
 
 
     getInitialState: function getInitialState() {
@@ -453,6 +521,38 @@ var TimeLine = React.createClass({
     },
 
     _handleAdd: function _handleAdd(o) {
+        var that = this,
+            vinfo = this.props.vinfo();
+
+        // 航班信息
+        /*
+        if (o.flight) {
+                var mFrom = new yuantu.Marker({ address: o.departAirport });
+            var mTo   = new yuantu.Marker({ address: o.arriveAirport });
+            var line  = new yuantu.Line(mFrom, mTo);
+                line.focus();
+            headmap.lines.push(line);
+              // 出发城市
+            if (!vinfo.state.startCity) {
+                mFrom.queryCity(function(name) {
+                    vinfo.setState({ startCity: name });
+                });
+            }
+              // 终点城市
+            mTo.queryCity(function(name) {
+                vinfo.setState({ endCity: name });
+            });
+              // 价格计算
+            var price = vinfo.state.price;
+            var ret = o.price.match(/\d+/);
+            if (ret) {
+                price += parseInt(ret[0]);
+            }
+            vinfo.setState({ price: price });
+              // 时间计算
+            // 没有日期数据。
+        }*/
+
         this.state.data.push(o);
         this.forceUpdate(function () {
             document.body.scrollTop = 100000;
@@ -464,9 +564,9 @@ var TimeLine = React.createClass({
         var data = this.state.data;
 
         return React.createElement(
-            "div",
-            { className: "timeline" },
-            React.createElement("div", { className: "time-tag geol" }),
+            'div',
+            { className: 'timeline' },
+            React.createElement('div', { className: 'time-tag geol' }),
             data.map(function (o, i) {
                 return React.createElement(TimeAct, { data: o, key: "act_" + i });
             }),
@@ -478,25 +578,25 @@ var TimeLine = React.createClass({
 //<div className="time-tag takephoto"></div>
 
 var Comments = React.createClass({
-    displayName: "Comments",
+    displayName: 'Comments',
 
 
     render: function render() {
         var data = this.props.data || [];
 
         return React.createElement(
-            "div",
-            { className: "comments" },
+            'div',
+            { className: 'comments' },
             data.map(function (o, i) {
                 return React.createElement(
-                    "div",
-                    { className: "comment-text" },
+                    'div',
+                    { className: 'comment-text' },
                     React.createElement(
-                        "span",
-                        { className: "avatar" },
-                        React.createElement("img", { src: "img/avatar01.png", alt: "" })
+                        'span',
+                        { className: 'avatar' },
+                        React.createElement('img', { src: 'img/avatar01.png', alt: '' })
                     ),
-                    "body"
+                    'body'
                 );
             })
         );
@@ -504,32 +604,16 @@ var Comments = React.createClass({
 });
 
 var SearchPage = React.createClass({
-    displayName: "SearchPage",
+    displayName: 'SearchPage',
 
 
     getInitialState: function getInitialState() {
-        return {
-            data: {
-                title: "搜索机票",
-                search: [{
-                    class: "search-dapart",
-                    label: "出发城市",
-                    format: "",
-                    value: "上海"
-                }, {
-                    class: "search-dest",
-                    label: "到达城市",
-                    format: "",
-                    value: "成都"
-                }, {
-                    class: "search-date",
-                    label: "出发日期",
-                    format: "",
-                    value: "yyyy-mm-dd"
-                }],
 
-                flights: flight_shanghai_chengdu
-            }
+        return {
+            city: "",
+            dstCity: "",
+            search_data: [],
+            data: []
         };
     },
 
@@ -539,104 +623,330 @@ var SearchPage = React.createClass({
         if ($t.length) {
             var idx = $t.attr('title');
             if (idx) {
-                this.props.onSelected(flight_shanghai_chengdu[idx]);
+                var data = this.state.data[idx];
+                data.type = this.state.type;
+
+                switch (data.type) {
+                    case 'flight':
+                        break;
+                    case 'hotel':
+                        break;
+                    case 'scenic':
+                        CFG.current = CFG.current == 2 ? 0 : CFG.current + 1;
+                        break;
+                }
+
+                this.props.onSelected(data);
             }
         }
     },
 
+    componentWillMount: function componentWillMount() {
+        this.updateData();
+    },
+
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+        if (this.props.type != nextProps.type) {
+            this.updateData(nextProps.type);
+        }
+    },
+
+    updateData: function updateData(type) {
+        type = type || this.props.type;
+
+        var stepcity = CFG['circuit'][CFG.current];
+
+        var data = CFG[type + '_data'][stepcity];
+
+        this.setState({
+            type: type,
+            search_data: CFG[type + "_search"][stepcity],
+            data: data
+        });
+    },
+
     render: function render() {
-        var data = this.state.data;
+        var type = this.props.type;
+        var search_data = this.state.search_data;
+        var data = this.state.data || [];
+
+        var renderfunc = this[type];
 
         return React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-                "div",
-                { className: "search-tool" },
-                data.search.map(function (o, i) {
+                'div',
+                { className: 'search-tool' },
+                search_data.map(function (o, i) {
                     return React.createElement(
-                        "div",
+                        'div',
                         { key: "s" + i, className: "flight-cell " + o.class },
                         React.createElement(
-                            "span",
+                            'span',
                             null,
                             o.label
                         ),
-                        React.createElement("input", { placeholder: o.value })
+                        React.createElement('input', { ref: 'txt' + i, placeholder: o.value })
                     );
                 }),
                 React.createElement(
-                    "div",
-                    { className: "flight-cell search-btn" },
+                    'div',
+                    { className: 'flight-cell search-btn' },
                     React.createElement(
-                        "span",
+                        'span',
                         null,
-                        "  "
+                        '  '
                     ),
-                    React.createElement("input", { className: "g-btn", defaultValue: "搜索" })
+                    React.createElement('input', { type: 'button', className: 'g-btn', defaultValue: '搜索' })
                 )
             ),
-            React.createElement(
-                "ul",
-                { className: "mf-list-ul", onClick: this._handleSelect },
-                data.flights.map(function (o, i) {
-                    return React.createElement(
-                        "li",
-                        { key: i, title: i, className: "js-open-cabin mf-main-cabin mf-arrow-bottom" },
+            renderfunc(data)
+        );
+    },
+
+    flight: function flight(data) {
+        return React.createElement(
+            'ul',
+            { className: 'mf-list-ul', onClick: this._handleSelect },
+            data.map(function (o, i) {
+                return React.createElement(
+                    'li',
+                    { key: i, title: i, className: 'js-open-cabin mf-main-cabin mf-arrow-bottom' },
+                    React.createElement(
+                        'div',
+                        { className: 'mf-flight-info1' },
                         React.createElement(
-                            "div",
-                            { className: "mf-flight-info1" },
+                            'div',
+                            { className: 'mf-date-wrap' },
                             React.createElement(
-                                "div",
-                                { className: "mf-date-wrap" },
+                                'div',
+                                { className: 'mf-dtime' },
                                 React.createElement(
-                                    "div",
-                                    { className: "mf-dtime" },
-                                    React.createElement(
-                                        "span",
-                                        { className: "mf-list-time" },
-                                        o.departTime
-                                    ),
-                                    React.createElement(
-                                        "span",
-                                        { className: "mf-airPort" },
-                                        o.departAirport
-                                    )
+                                    'span',
+                                    { className: 'mf-list-time' },
+                                    o.departTime
                                 ),
                                 React.createElement(
-                                    "div",
-                                    { className: "mf-middle" },
-                                    React.createElement("i", { className: "mf-flight-line-list" })
-                                ),
-                                React.createElement(
-                                    "div",
-                                    { className: "mf-atime" },
-                                    React.createElement(
-                                        "span",
-                                        { className: "mf-list-time" },
-                                        o.arriveTime
-                                    ),
-                                    React.createElement(
-                                        "span",
-                                        { className: "mf-airPort" },
-                                        o.arriveAirport
-                                    )
+                                    'span',
+                                    { className: 'mf-airPort' },
+                                    o.departAirport
                                 )
                             ),
                             React.createElement(
-                                "div",
-                                { className: "mf-price-wrap" },
+                                'div',
+                                { className: 'mf-middle' },
+                                React.createElement('i', { className: 'mf-flight-line-list' })
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'mf-atime' },
                                 React.createElement(
-                                    "div",
-                                    { className: "mf-overh clearfix" },
+                                    'span',
+                                    { className: 'mf-list-time' },
+                                    o.arriveTime
+                                ),
+                                React.createElement(
+                                    'span',
+                                    { className: 'mf-airPort' },
+                                    o.arriveAirport
+                                )
+                            )
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'mf-price-wrap' },
+                            React.createElement(
+                                'div',
+                                { className: 'mf-overh clearfix' },
+                                React.createElement(
+                                    'div',
+                                    { className: 'mf-flight-price' },
                                     React.createElement(
-                                        "div",
-                                        { className: "mf-flight-price" },
+                                        'span',
+                                        { className: 'mf-flight-price-num' },
+                                        o.price
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+            })
+        );
+    },
+
+    hotel: function hotel(data) {
+
+        return React.createElement(
+            'div',
+            { className: 'hotel-g-bd hotel-hot js_hotel_list' },
+            React.createElement(
+                'ul',
+                { className: 'hotel-g-list', onClick: this._handleSelect },
+                data.map(function (o, i) {
+                    return React.createElement(
+                        'li',
+                        { className: 'js_hotel_detail', title: i, key: "hotel_" + i },
+                        React.createElement(
+                            'div',
+                            { className: 'hotel-g-proimg' },
+                            React.createElement('img', { className: 'js_hotelimg', alt: o.name, width: '96', height: '96', src: o.pic })
+                        ),
+                        React.createElement(
+                            'div',
+                            { className: 'hotel-g-cbd' },
+                            React.createElement(
+                                'h4',
+                                { className: 'ellips js_hotelname' },
+                                o.name
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'list-c' },
+                                React.createElement(
+                                    'span',
+                                    { className: 'price-num fr' },
+                                    React.createElement(
+                                        'b',
+                                        { className: 'num js_translog_price', 'data-price': '848' },
+                                        o.price
+                                    )
+                                ),
+                                React.createElement(
+                                    'span',
+                                    { className: 'rate-num js_hotelpoint' },
+                                    o.value,
+                                    '分'
+                                ),
+                                React.createElement(
+                                    'span',
+                                    { className: 'cgray' },
+                                    o.judgementScore
+                                )
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'list-c hotel-cell' },
+                                React.createElement(
+                                    'span',
+                                    { className: 'cgray js_hotelstar' },
+                                    '高档型'
+                                ),
+                                React.createElement(
+                                    'span',
+                                    { className: 'ico-txt ico-tags-ellips' },
+                                    React.createElement('span', null),
+                                    ' ',
+                                    React.createElement('span', { className: 't-r' })
+                                )
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'list-c' },
+                                React.createElement(
+                                    'span',
+                                    { className: 'c808080 fn12' },
+                                    '最新预订:4小时前'
+                                )
+                            )
+                        )
+                    );
+                })
+            )
+        );
+    },
+
+    scenic: function scenic(data) {
+        return React.createElement(
+            'div',
+            { className: 'ticket_list list-bottom-fix' },
+            React.createElement(
+                'ul',
+                { className: 'border-list g-pro-list ttd-pro-list no-border-top', onClick: this._handleSelect },
+                data.map(function (o, i) {
+                    return React.createElement(
+                        'li',
+                        { className: 'js_go_to_detail', title: i, key: "hotel_" + i },
+                        React.createElement(
+                            'div',
+                            { className: 'js_visited border-item g-pro-list_pl5 ttd-pro-list-item' },
+                            React.createElement(
+                                'div',
+                                { className: 'g-pro-list-img' },
+                                React.createElement('span', { className: 'f-logo' }),
+                                React.createElement('img', { className: 'fl fade-in', src: o.pic })
+                            ),
+                            React.createElement(
+                                'div',
+                                { className: 'g-pro-list-info g-pro-list-info-1' },
+                                React.createElement(
+                                    'h3',
+                                    { className: 'g-title ellips_line2' },
+                                    o.name
+                                ),
+                                React.createElement(
+                                    'div',
+                                    { className: 'spot-info' },
+                                    o.rate
+                                ),
+                                React.createElement(
+                                    'div',
+                                    { className: 'g-pro-info-item price-row' },
+                                    React.createElement(
+                                        'div',
+                                        { className: 'ib_container' },
                                         React.createElement(
-                                            "span",
-                                            { className: "mf-flight-price-num" },
-                                            o.price
+                                            'span',
+                                            { className: 'u-pro-tag ib' },
+                                            React.createElement(
+                                                'i',
+                                                { className: 'blue' },
+                                                '今日可用'
+                                            )
+                                        ),
+                                        React.createElement(
+                                            'span',
+                                            { className: 'u-pro-tag ib' },
+                                            React.createElement(
+                                                'i',
+                                                { className: 'green' },
+                                                '亲子'
+                                            )
+                                        ),
+                                        React.createElement(
+                                            'span',
+                                            { className: 'u-pro-tag ib' },
+                                            React.createElement(
+                                                'i',
+                                                { className: 'green' },
+                                                '自然风光'
+                                            )
+                                        ),
+                                        React.createElement(
+                                            'div',
+                                            { className: 'ttd-list-price' },
+                                            React.createElement(
+                                                'span',
+                                                { className: 'u-pro-price' },
+                                                o.tickets[0].price
+                                            )
                                         )
+                                    )
+                                ),
+                                React.createElement(
+                                    'div',
+                                    { className: 'g-pro-info-item' },
+                                    React.createElement(
+                                        'span',
+                                        { className: 'ttd-sale' },
+                                        '月销：332份'
+                                    ),
+                                    React.createElement(
+                                        'span',
+                                        { className: 'g-score list-info-abs' },
+                                        o.grade,
+                                        '分'
                                     )
                                 )
                             )
@@ -649,7 +959,7 @@ var SearchPage = React.createClass({
 });
 
 var Modal = React.createClass({
-    displayName: "Modal",
+    displayName: 'Modal',
 
 
     getInitialState: function getInitialState() {
@@ -677,26 +987,26 @@ var Modal = React.createClass({
     render: function render() {
 
         return React.createElement(
-            "div",
-            { className: "fly-layer " + this.state.display, id: "fly-layer" },
+            'div',
+            { className: "fly-layer " + this.state.display, id: 'fly-layer' },
             React.createElement(
-                "div",
-                { className: "main-frame" },
+                'div',
+                { className: 'main-frame' },
                 React.createElement(
-                    "div",
-                    { className: "main-viewport" },
+                    'div',
+                    { className: 'main-viewport' },
                     React.createElement(
-                        "div",
+                        'div',
                         { style: { "height": "40px" } },
                         React.createElement(
-                            "div",
-                            { className: "cm-header" },
+                            'div',
+                            { className: 'cm-header' },
                             React.createElement(
-                                "h1",
-                                { className: "cm-page-title js_title" },
+                                'h1',
+                                { className: 'cm-page-title js_title' },
                                 this.state.title
                             ),
-                            React.createElement("span", { className: "cm-header-icon icon_share i_close", onClick: this.close })
+                            React.createElement('span', { className: 'cm-header-icon icon_share i_close', onClick: this.close })
                         )
                     ),
                     this.state.content
@@ -707,31 +1017,35 @@ var Modal = React.createClass({
 });
 
 var App = React.createClass({
-    displayName: "App",
+    displayName: 'App',
 
 
     modal: function modal() {
         return this.refs['modal'];
     },
 
+    vinfo: function vinfo() {
+        return this.refs['vinfo'];
+    },
+
     render: function render() {
         return React.createElement(
             Paper,
             null,
-            React.createElement(Modal, { ref: "modal" }),
+            React.createElement(Modal, { ref: 'modal' }),
             React.createElement(FixMap, null),
             React.createElement(
-                "div",
-                { id: "main" },
+                'div',
+                { id: 'main' },
                 React.createElement(
-                    "div",
-                    { className: "main-frame" },
+                    'div',
+                    { className: 'main-frame' },
                     React.createElement(
-                        "div",
-                        { className: "main-viewport" },
+                        'div',
+                        { className: 'main-viewport' },
                         React.createElement(UserBox, { modal: this.modal }),
-                        React.createElement(Vinfo, null),
-                        React.createElement(TimeLine, { modal: this.modal })
+                        React.createElement(Vinfo, { ref: 'vinfo' }),
+                        React.createElement(TimeLine, { modal: this.modal, vinfo: this.vinfo })
                     )
                 )
             )

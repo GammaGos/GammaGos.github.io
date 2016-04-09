@@ -1,28 +1,8 @@
 var headmap = {
     map: null,
-    lines: []
+    overloads: []
 };
 
-var CFG = {
-    users: [
-        {
-            letter: "A",
-            name: "ataa.P",
-            head: "img/avatar01.png",
-        },
-        {
-            letter: "H",
-            name: "hack.PI",
-            head: "img/avatar02.png"
-        },
-        {
-            letter: "N",
-            name: "nunn.L",
-            head: "img/avatar_b_01.png"
-            // isActive: true
-        }
-    ]
-}
 
 var Paper = React.createClass({
 
@@ -217,39 +197,69 @@ var TimeAct = React.createClass({
         return (
             <div className="time-bar">
                 <span className="time-tag clock"></span>
-                <span className="status">已预订</span>
                 <p>下午20：16，3月31日</p>
             </div>
         )
     },
 
-    render: function(){
-
-        var data = this.props.data;
-
+    flight: function(data){
         return (
-            <div>
-                <div className="time-act">
-                    {this.renderTimeBar()}
-                    <div className="flight-box">
-                        <h3>{data.company + data.flight}</h3>
-                        <div className="flight-from">
-                            <big>上海</big>
-                            <small>{data.departAirport}</small>
-                            <strong>{data.departTime}</strong>
-                        </div>
-                        <div className="flight-to">
-                            <big>成都</big>
-                            <small>{data.arriveAirport}</small>
-                            <strong>{data.arriveTime}</strong>
-                        </div>
-                        <abbr></abbr>
+            <div className="time-act">
+                {this.renderTimeBar()}
+                <div className="flight-box">
+                    <h3>{data.company + data.flight}</h3>
+                    <div className="flight-from">
+                        <big>上海</big>
+                        <small>{data.departAirport}</small>
+                        <strong>{data.departTime}</strong>
                     </div>
+                    <div className="flight-to">
+                        <big>成都</big>
+                        <small>{data.arriveAirport}</small>
+                        <strong>{data.arriveTime}</strong>
+                    </div>
+                    <abbr></abbr>
                 </div>
-
-                <Comments data={data.comments || []} />
             </div>
         )
+    },
+
+    hotel: function(data){
+        return (
+            <div className="time-act">
+                {this.renderTimeBar()}
+                <div className="hotel-box" >
+                    <div className="checkinfo"><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
+                    <div className="maskshow">
+                        <div title="0" className="hotels">
+                            <i className="tag-fav">10</i>
+                            <h3>{data.name}</h3>
+                            <p><img src="img/img03.jpg" alt=""/></p>
+                        </div>
+                        <div title="2"  className="hotels">
+                            添加
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    },
+
+    scenic: function(data){
+        return (
+            <div className="time-act">
+                {this.renderTimeBar()}
+                <div className="scenic-box">
+                    <div className="scenicinfo">{data.name}</div>
+                    <div className="scenicspot"><img src="img/pic01.jpg" alt=""/></div>
+                </div>
+            </div>
+        )
+    },
+
+    render: function(){
+        var data = this.props.data;
+        return this[data.type](data);
     }
 });
 
@@ -295,18 +305,17 @@ var TimeTool = React.createClass({
 
         switch(_key){
             case "flight":
-                this.props.modal().open("选择机票", <SearchPage onSelected={this._handleDone} />)
+                this.props.modal().open("选择机票", <SearchPage type={_key} onSelected={this._handleDone} />)
                 break;
             case "hotel":
-                this.props.modal().open("选择酒店", <SearchPage onSelected={this._handleDone} />)
+                this.props.modal().open("选择酒店", <SearchPage type={_key} onSelected={this._handleDone} />)
                 break;
             case "scenic":
-                this._key = _key;
+                this.props.modal().open("选择门票", <SearchPage type={_key} onSelected={this._handleDone} />)
                 break;
             default:
                 //do nothin
         }
-
     },
 
     _handleDone: function(data){
@@ -326,13 +335,12 @@ var TimeLine = React.createClass({
     _handleAdd: function(o){
         var that = this, vinfo = this.props.vinfo();
 
+        var overload;
         // 航班信息
         if (o.flight) {
             var mFrom = new yuantu.Marker({ address: o.departAirport });
             var mTo   = new yuantu.Marker({ address: o.arriveAirport });
             var line  = new yuantu.Line(mFrom, mTo);
-            line.focus();
-            headmap.lines.push(line);
 
             // 出发城市
             if (!vinfo.state.startCity) {
@@ -356,7 +364,28 @@ var TimeLine = React.createClass({
 
             // 时间计算
             // 没有日期数据。
+            overload = line;
         }
+
+        // 景点信息
+        else if (o.detailedAddress) {
+            var marker = new yuantu.Marker({ address: o.detailedAddress, zoom: 13 });
+            overload = marker;
+        }
+
+        // 酒店信息
+        else {
+            var marker = new yuantu.Marker({ address: o.name, zoom: 15 });
+            overload = marker;
+        }
+
+
+        if (headmap.focusing) {
+            headmap.focusing.focus(false);
+        }
+        headmap.focusing = overload;
+        headmap.focusing.focus();
+        headmap.overloads.push(overload);
 
         this.state.data.push(o)
         this.forceUpdate(function(){
@@ -409,33 +438,14 @@ var Comments = React.createClass({
 
 var SearchPage = React.createClass({
 
-    getInitialState: function(){
-        return {
-            data: {
-            title: "搜索机票",
-                search: [
-                    {
-                        class: "search-dapart",
-                        label: "出发城市",
-                        format: "",
-                        value: "上海",
-                    },
-                    {
-                        class: "search-dest",
-                        label: "到达城市",
-                        format: "",
-                        value: "成都",
-                    },
-                    {
-                        class: "search-date",
-                        label: "出发日期",
-                        format: "",
-                        value: "yyyy-mm-dd",
-                    }
-                ],
 
-                flights: flight_shanghai_chengdu
-            }
+    getInitialState: function(){
+
+        return {
+            city: "",
+            dstCity: "",
+            search_data: [],
+            data: [],
         }
     },
 
@@ -445,53 +455,172 @@ var SearchPage = React.createClass({
         if($t.length){
             var idx = $t.attr('title');
             if(idx){
-                this.props.onSelected(flight_shanghai_chengdu[idx])
+                var data = this.state.data[idx];
+                data.type = this.state.type;
+
+                switch (data.type){
+                    case 'flight':
+                        break;
+                    case 'hotel':
+                        break;
+                    case 'scenic':
+                        CFG.current = (CFG.current == 2) ? 0 : CFG.current + 1;
+                        break;
+                }
+
+                this.props.onSelected(data)
             }
         }
     },
 
+    componentWillMount: function(){
+        this.updateData();
+    },
+
+    componentWillReceiveProps: function(nextProps){
+        if(this.props.type !=  nextProps.type) {
+            this.updateData(nextProps.type);
+        }
+    },
+
+    updateData: function(type){
+        type = type || this.props.type;
+
+        var stepcity = CFG['circuit'][CFG.current];
+
+        var data = CFG[type+'_data'][stepcity];
+
+        this.setState({
+            type: type,
+            search_data: CFG[type + "_search"][stepcity],
+            data: data
+        });
+    },
+
     render: function(){
-        var data = this.state.data;
+        var type = this.props.type;
+        var search_data = this.state.search_data;
+        var data = this.state.data || [];
+
+        var renderfunc = this[type];
 
         return (
             <div>
                 <div className="search-tool">
-                    {data.search.map(function(o, i){
-                        return <div key={"s"+i} className={"flight-cell "+o.class}><span>{o.label}</span><input placeholder={o.value}/></div>
+                    {search_data.map(function(o, i){
+                        return <div key={"s"+i} className={"flight-cell "+o.class}>
+                            <span>{o.label}</span>
+                            <input ref={'txt'+i} placeholder={o.value}/>
+                        </div>
                     })}
-                    <div className="flight-cell search-btn"><span>&nbsp; </span><input className="g-btn" defaultValue="搜索" /></div>
+                    <div className="flight-cell search-btn"><span>&nbsp; </span><input type="button" className="g-btn" defaultValue="搜索" /></div>
                 </div>
+                {renderfunc(data)}
+            </div>
+        )
+    },
 
-                <ul className="mf-list-ul" onClick={this._handleSelect}>
-                    {data.flights.map(function(o, i){
-                        return (
-                            <li key={i} title={i} className="js-open-cabin mf-main-cabin mf-arrow-bottom">
-                                <div className="mf-flight-info1">
-                                    <div className="mf-date-wrap">
-                                        <div className="mf-dtime">
-                                            <span className="mf-list-time">{o.departTime}</span>
-                                            <span className="mf-airPort">{o.departAirport}</span>
-                                        </div>
-                                        <div className="mf-middle">
-                                             <i className="mf-flight-line-list"></i>
-                                        </div>
-                                        <div className="mf-atime">
-                                            <span className="mf-list-time">{o.arriveTime}</span>
-                                            <span className="mf-airPort">{o.arriveAirport}</span>
-                                        </div>
-                                    </div>
-                                    <div className="mf-price-wrap">
-                                        <div className="mf-overh clearfix">
-                                            <div className="mf-flight-price">
+    flight: function(data){
+        return (<ul className="mf-list-ul" onClick={this._handleSelect}>
+            {data.map(function(o, i){
+                return (
+                <li key={i} title={i} className="js-open-cabin mf-main-cabin mf-arrow-bottom">
+                    <div className="mf-flight-info1">
+                        <div className="mf-date-wrap">
+                            <div className="mf-dtime">
+                                <span className="mf-list-time">{o.departTime}</span>
+                                <span className="mf-airPort">{o.departAirport}</span>
+                            </div>
+                            <div className="mf-middle">
+                                <i className="mf-flight-line-list"></i>
+                            </div>
+                            <div className="mf-atime">
+                                <span className="mf-list-time">{o.arriveTime}</span>
+                                <span className="mf-airPort">{o.arriveAirport}</span>
+                            </div>
+                        </div>
+                        <div className="mf-price-wrap">
+                            <div className="mf-overh clearfix">
+                                <div className="mf-flight-price">
                                                 <span className="mf-flight-price-num">
                                                    {o.price}
                                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                    )
+                })}
+        </ul>);
+    },
+
+    hotel: function(data){
+
+        return (
+            <div className="hotel-g-bd hotel-hot js_hotel_list">
+                <ul className="hotel-g-list"  onClick={this._handleSelect}>
+
+                    {data.map(function(o, i){
+                        return (<li className="js_hotel_detail" title={i} key={"hotel_"+i}>
+                            <div className="hotel-g-proimg">
+                                <img className="js_hotelimg" alt={o.name} width="96" height="96" src={o.pic} />
+                            </div>
+                            <div className="hotel-g-cbd">
+                                <h4 className="ellips js_hotelname">{o.name}</h4>
+                                <div className="list-c">
+                                    <span className="price-num fr"><b className="num js_translog_price" data-price="848">{o.price}</b></span>
+                                    <span className="rate-num js_hotelpoint">{o.value}分</span>
+                                    <span className="cgray">{o.judgementScore}</span>
+                                </div>
+                                <div className="list-c hotel-cell">
+                                    <span className="cgray js_hotelstar">高档型</span>
+                                    <span className="ico-txt ico-tags-ellips"><span></span> <span className="t-r"></span></span>
+                                </div>
+                                <div className="list-c">
+                                    <span className="c808080 fn12">最新预订:4小时前</span>
+                                </div>
+                            </div>
+                        </li>)
+                    })}
+                </ul>
+            </div>
+        )
+    },
+
+    scenic: function(data){
+        return (
+            <div className="ticket_list list-bottom-fix">
+                <ul className="border-list g-pro-list ttd-pro-list no-border-top"  onClick={this._handleSelect}>
+
+                    {data.map(function(o, i){
+                        console.log(o);
+                        return (<li className="js_go_to_detail" title={i} key={"hotel_"+i}>
+                            <div className="js_visited border-item g-pro-list_pl5 ttd-pro-list-item">
+                                <div className="g-pro-list-img">
+                                    <span className="f-logo"></span>
+                                    <img className="fl fade-in" src={o.pic} />
+                                </div>
+                                <div className="g-pro-list-info g-pro-list-info-1">
+                                    <h3 className="g-title ellips_line2">{o.name}</h3>
+                                    <div className="spot-info">{o.rate}</div>
+                                    <div className="g-pro-info-item price-row">
+                                        <div className="ib_container">
+                                            <span className="u-pro-tag ib"><i className="blue">今日可用</i></span>
+                                            <span className="u-pro-tag ib"><i className="green">亲子</i></span>
+                                            <span className="u-pro-tag ib"><i className="green">自然风光</i></span>
+                                            <div className="ttd-list-price">
+                                                <span className="u-pro-price">{o.tickets[0].price}</span>
                                             </div>
                                         </div>
                                     </div>
+                                    <div className="g-pro-info-item">
+                                        <span className="ttd-sale">月销：332份</span>
+                                        <span className="g-score list-info-abs">{o.grade}分</span>
+                                    </div>
                                 </div>
-                            </li>
-                        )
+                            </div>
+                        </li>)
                     })}
                 </ul>
             </div>

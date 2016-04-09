@@ -144,7 +144,7 @@
 
 							}else{
 								$maskshow.addClass('on');
-								outer = new HammerCarousel(maskshow, Hammer.DIRECTION_HORIZONTAL);
+								outer = new HammerCarousel(maskshow, Hammer.DIRECTION_VERTICAL);
 							}
 							break;
 
@@ -260,24 +260,28 @@
                             <div class="checkinfo"><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
                             <div class="maskshow" style="padding-bottom:296px;"><!-- 高度位置，212 + n*42 -->
                                 <!-- 酒店可选，入离时间不可选，仅可添加酒店-->
-                                <div title="0" class="hotels" style="">
+                                <div  tabindex="1" title="0" class="hotels" style="">
                                     <i class="tag-fav">10</i>
                                     <h3>Goodwood Park Hotel Singapore (新加坡良木园大酒店) </h3>
                                     <p><img src="img/img03.jpg" alt=""/></p>
                                 </div>
 
-                                <div title="1"  class="hotels">
+                                <div  tabindex="2" title="1"  class="hotels">
                                     <!-- 计算位置，step：42，1*42 -->
                                     <i class="tag-fav">10</i>
                                     <h3>Marina Bay Sands Singapore (新加坡滨海湾金沙大酒店) </h3>
                                     <p><img src="img/img02.jpg" alt=""/></p>
                                 </div>
 
-                                <div title="2"  class="hotels">
+                                <div  tabindex="3" title="2"  class="hotels">
                                     <!-- 2*42 -->
                                     <i class="tag-fav">10</i>
                                     <h3>Days Hotel Singapore at Zhongshan Park (新加坡中山公园戴斯酒店)</h3>
                                     <p><img src="img/img01.jpg" alt=""/></p>
+                                </div>
+
+								<div  tabindex="0" title="2"  class="hotels">
+                                    ++++++++++++++++++++++++++
                                 </div>
 
                             </div>
