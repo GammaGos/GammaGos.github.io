@@ -1,0 +1,81 @@
+var flight_shanghai_chengdu = [{
+	"company": "深圳航空",
+	"flight": "ZH4536",
+	"departTime": "21:00",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "00:25",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥726"
+}, {
+	"company": "中国国航",
+	"flight": "CA1947",
+	"departTime": "07:10",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "10:30",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥730"
+}, {
+	"company": "中国国航",
+	"flight": "CA1949",
+	"departTime": "16:40",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "20:05",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥730"
+}, {
+	"company": "中国国航",
+	"flight": "CA4536",
+	"departTime": "21:00",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "00:25",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥730"
+}, {
+	"company": "成都航空",
+	"flight": "EU6678",
+	"departTime": "21:40",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "01:05",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥740"
+}, {
+	"company": "深圳航空",
+	"flight": "ZH1947",
+	"departTime": "07:10",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "10:30",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥746"
+}, {
+	"company": "深圳航空",
+	"flight": "ZH1949",
+	"departTime": "16:40",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "20:05",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥746"
+}, {
+	"company": "山东航空",
+	"flight": "SC1947",
+	"departTime": "07:10",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "10:30",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥768"
+}, {
+	"company": "山东航空",
+	"flight": "SC1949",
+	"departTime": "16:40",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "20:05",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥768"
+}, {
+	"company": "山东航空",
+	"flight": "SC4536",
+	"departTime": "21:00",
+	"departAirport": "浦东国际机场T2",
+	"arriveTime": "00:25",
+	"arriveAirport": "双流国际机场T2",
+	"price": "¥768"
+}]
