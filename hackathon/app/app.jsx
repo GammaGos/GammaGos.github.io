@@ -281,17 +281,52 @@ var TimeAct = React.createClass({
 
         )
     },
+    _photohandleSelect:function(e){
+        this.props.modal().close();
+        if($(this.refs.photobox).css("display")=="none"){
+            $(this.refs.photobox).show();
 
+        }else{
+            $(this.refs.photobox).find('.photo-imgs').append($('<img src="img/photo01.jpg" alt=""/>'));
+        }
+    },
+    renderPhotoList: function(){
+        return (
+            <div className="main-viewport">
+                <div className="photolib" onClick={this._photohandleSelect}>
+                    <div className="photo"><img src="img/photo01.jpg" alt=""/></div>
+                    <div className="photo"><img src="img/photo02.jpg" alt=""/></div>
+                    <div className="photo"><img src="img/photo01.jpg" alt=""/></div>
+                </div>
+            </div>
+        )
+    },
+    takephoto:function(){
+
+        this.props.modal().open("选择照片", this.renderPhotoList());
+
+
+    },
     scenic: function(data){
         return (
-
-            <div className="time-act" onClick={this.onclick}>>
+            <div>
+            <div className="time-act" onClick={this.onclick}>
                 {this.renderTimeBar(data.date)}
 
                 <div className="scenic-box">
                     <div className="scenicinfo">{data.name}</div>
                     <div className="scenicspot"><img src="img/pic01.jpg" alt=""/></div>
                 </div>
+
+            </div>
+            <div className="time-tag takephoto" onClick={this.takephoto}></div>
+            <div className="time-act" style={{display:"none"}} ref="photobox">
+                <div className="time-bar"><span className="time-tag clock"></span><p>下午20：16，3月31日</p></div>
+                <div className="photo-box">
+                    <p>三月的最后一天，这里景色如画,</p>
+                    <div className="photo-imgs"><img src="img/photo01.jpg" alt=""/></div>
+                </div>
+            </div>
             </div>
         )
     },
@@ -495,13 +530,13 @@ var TimeLine = React.createClass({
     render: function(){
 
         var data = this.state.data;
-
+        var that = this;
         return (
             <div className="timeline">
                 <div className="time-tag geol"><span className="geoltext">上海临空SOHO携程网络技术大楼</span></div>
 
                 {data.map(function(o, i){
-                    return <TimeAct data={o} key={"act_"+i} />
+                    return <TimeAct data={o} key={"act_"+i} modal={that.props.modal}/>
                 })}
                 <TimeTool modal={this.props.modal} onSelected={this._handleAdd} />
             </div>

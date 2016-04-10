@@ -85,7 +85,7 @@ img{vertical-align:middle;}
 
 /**/
 .time-tag{ width: 36px; height: 36px;margin-left:10px; background-color:#1470e4;background-repeat: no-repeat; background-position: 50% 50%; border-radius: 50%;}
-.takephoto{background-image: url(../img/icon-camera.svg);background-size: 65%;}
+.takephoto{background-image: url(../img/icon-camera.svg);background-size: 65%;margin-bottom:20px;}
 .geol{background-image: url(../img/icon-spot.svg);background-size: 70%;margin-bottom: 20px;}
 .addact{background-image: url(../img/icon-add.svg);background-size: 65%;}
 .flight{background-image: url(../img/icon-flight2.svg);background-size: 80%;background-color:#fff;}
