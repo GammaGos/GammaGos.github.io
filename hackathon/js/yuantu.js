@@ -303,7 +303,7 @@ var yuantu = (function(global, undefined) {
 	TU.Map = function(options) {
 		this._instance = agent.initMap({
 			container: options.container,
-			plugins: [ 'AMap.ToolBar', 'AMap.Scale', 'AMap.Geolocation' ]
+			plugins: [ /* 'AMap.ToolBar', */ 'AMap.Scale' /* , 'AMap.Geolocation' */ ]
 		});
 	};
 	TU.Map.prototype.active = function() {

@@ -91,6 +91,13 @@ img{vertical-align:middle;}
 .flight{background-image: url(../img/icon-flight2.svg);background-size: 80%;background-color:#fff;}
 .scenic{background-image: url(../img/icon-scenic.svg);background-size: 65%;background-color:#fff;}
 .hotel{background-image: url(../img/icon-hotel.svg);background-size: 65%;background-color:#fff;}
+.editicon{float: right;height: 26px;width: 26px;border:2px solid #dedede;margin-top: -6px;border-radius: 50%;
+    background-color:#fff;
+    background-image: url(../img/icon-edit.svg);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 60%;
+}
 
 .cm-header .cm-header-icon.i_close{height:36px;width:36px;margin:4px;background-image: url(../img/icon-add.svg);background-size: 50%;
     background-repeat: no-repeat;

@@ -73,7 +73,7 @@ var FixMap = React.createClass({
                     </div>
                     <div className="user_me" ref="user">
                         <span className="avatar"><img src="img/avatar_b_01.png" alt="" /></span>
-                        <big>patata</big>
+                        <big>ColdCat</big>
                     </div>
                 </div>
             </div>
@@ -189,7 +189,7 @@ var Vinfo = React.createClass({
                     <li>
                         <small>时间</small>
                         <big>
-                            {formatDate(data.startDate)} - {formatDate(data.end)}
+                            {formatDate(data.startDate)} - {formatDate(data.endDate)}
                         </big>
                     </li>
                     <li>
@@ -209,11 +209,18 @@ var TimeAct = React.createClass({
         headmap.focusing.focus();
     },
 
-    renderTimeBar: function(){
+    checkinfo:function(){
+        var div = $('<div class="comment-text"></div>')
+        div.html('<span class="avatar"><img src="img/avatar01.png" alt=""/></span>都说法国签证已经不再难，但是每天还是能看见几个莫名其妙的拒签')
+        $(this.refs.comments).append(div)
+    },
+    renderTimeBar: function(date){
         return (
             <div className="time-bar">
                 <span className="time-tag clock"></span>
-                <p>下午20：16，3月31日</p>
+                <span className="status">未预订</span>
+                <p>{date.getHours()}:{date.getMinutes()} {date.getMonth() + 1}月{date.getDate()}日</p>
+
             </div>
         )
     },
@@ -221,7 +228,7 @@ var TimeAct = React.createClass({
     flight: function(data){
         return (
             <div className="time-act" onClick={this.onclick}>
-                {this.renderTimeBar()}
+                {this.renderTimeBar(data.date)}
                 <div className="flight-box">
                     <h3>{data.company + data.flight}</h3>
                     <div className="flight-from">
@@ -243,31 +250,44 @@ var TimeAct = React.createClass({
     hotel: function(data){
 
         return (
-            <div className="time-act" onClick={this.onclick}>
-                {this.renderTimeBar()}
-                <div className="hotel-box">
-                    <div ref="maskshow" className="maskshow" onclick="this.className+=' on';" style={{height:"256px"}}>
 
-                            <div title="2" className="hotels addhotel"><i>+</i>推荐酒店</div>
-                            <div title="0" className="hotels">
-                                <i className="tag-fav">10</i>
-                                <h3>Goodwood Park Hotel Singapore (新加坡良木园大酒店) </h3>
-                                <p><img src="img/img03.jpg" alt=""/></p>
-                            </div>
+            <div>
+                <div className="time-act" onClick={this.onclick}>
+                    {this.renderTimeBar(data.date)}
+                    <div className="hotel-box">
+                        <div ref="maskshow" className="maskshow" onclick="this.className+=' on';" style={{height:"256px"}}>
 
+                                <div title="2" className="hotels addhotel"><i>+</i>推荐酒店</div>
+                                <div title="0" className="hotels">
+                                    <i className="tag-fav">10</i>
+                                    <h3>Goodwood Park Hotel Singapore (新加坡良木园大酒店) </h3>
+                                    <p><img src="img/img03.jpg" alt=""/></p>
+                                </div>
+
+
+
+                        </div>
+                        <div className="token" style={{height:"296px",display:"none"}}></div>
+                        <div className="checkinfo" onClick={this.checkinfo}><span className="editicon"></span><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
 
                     </div>
-                    <div className="token" style={{height:"296px",display:"none"}}></div>
-                    <div className="checkinfo"><b>入住日期</b> 04月21日 周四 / <b>退房日期</b> 04月24日 周日</div>
+                </div>
+
+
+                <div className="comments" ref="comments">
+
                 </div>
             </div>
+
         )
     },
 
     scenic: function(data){
         return (
+
             <div className="time-act" onClick={this.onclick}>>
-                {this.renderTimeBar()}
+                {this.renderTimeBar(data.date)}
+
                 <div className="scenic-box">
                     <div className="scenicinfo">{data.name}</div>
                     <div className="scenicspot"><img src="img/pic01.jpg" alt=""/></div>
@@ -371,6 +391,13 @@ var TimeLine = React.createClass({
         var that = this, vinfo = this.props.vinfo();
 
         var overload;
+        // @TEMP
+        // 模拟变更时间信息
+        var d = new Date();
+        d.setYear(2016);
+        d.setHours(parseInt(Math.random() * 100) % 24);
+        d.setMinutes(parseInt(Math.random() * 100) % 60);
+
         // 航班信息
         if (o.flight) {
             var mFrom = new yuantu.Marker({ address: o.departAirport, icon: './img/dot02.png' });
@@ -406,6 +433,8 @@ var TimeLine = React.createClass({
 
         // 景点信息
         else if (o.detailedAddress) {
+            d.setHours(parseInt(Math.random() * 100) % 12 + 8);
+
             var marker = new yuantu.Marker({ address: o.detailedAddress, zoom: 13 });
             var path = new yuantu.Path(headmap.preMarker, marker);
 
@@ -438,6 +467,16 @@ var TimeLine = React.createClass({
             overload = marker;
         }
 
+        if (headmap.overloads.length == 0) {
+            d.setMonth(6); d.setDate(21);
+            vinfo.setState({ startDate: d });
+            vinfo.setState({ endDate: d });
+        }
+        else {
+            d.setMonth(6); d.setDate(21 + headmap.overloads.length);
+            vinfo.setState({ endDate: d });
+        }
+        o.date = d;
 
         if (headmap.focusing) {
             headmap.focusing.focus(false);
@@ -447,7 +486,7 @@ var TimeLine = React.createClass({
         headmap.overloads.push(overload);
         o.mapOverload = overload;
 
-        this.state.data.push(o)
+        this.state.data.push(o);
         this.forceUpdate(function(){
             document.body.scrollTop = 100000;
         });
@@ -459,7 +498,7 @@ var TimeLine = React.createClass({
 
         return (
             <div className="timeline">
-                <div className="time-tag geol"></div>
+                <div className="time-tag geol"><span className="geoltext">上海临空SOHO携程网络技术大楼</span></div>
 
                 {data.map(function(o, i){
                     return <TimeAct data={o} key={"act_"+i} />
