@@ -208,7 +208,7 @@ $(function(){
                     $maskshow.css('height',h+"px");
                     
                     var div = $('<div title="2" class="hotels"></div>');
-                    div.html('<i class="tag-fav" data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.0">10</i><h3 data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.1">Days Hotel Singapore at Zhongshan Park (新加坡中山公园戴斯酒店)</h3><p data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.2"><img src="img/img01.jpg" alt="" data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.2.0"></p>');
+                    div.html('<i class="tag-fav" data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.0">10</i><h3 data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.1">(中山公园戴斯酒店)</h3><p data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.2"><img src="img/img01.jpg" alt="" data-reactid=".0.2.0.0.2.1:$act_2.1.0.3.2.0"></p>');
                     $maskshow.append(div)
 
                 })
